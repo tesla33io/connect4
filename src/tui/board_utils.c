@@ -1,41 +1,37 @@
 
 #include "../../inc/connect_four.h"
 
-int isValidPosition (int **board, int row, int col)
+
+
+int isValidPosition (uint64_t board[MAX_SIZE], int row, int col)
 {
-    if (board[row][col] == -1)
-        return (1);
-    return 0;
+    return !(board[row] & (1UL << col));
 }
 
-void    initBoard(t_game *game)
+int getOpenedRowFromCol(uint64_t board[MAX_SIZE], int col, int maxCol, int maxRow)
 {
-    for (int i = 0; i < game->rows; i++)
+    if (col >= maxCol)
+        return (-1);
+    for (int row = 0; row < maxRow; row++)
     {
-        for (int j = 0; j < game->cols; j++)
-            game->board[i][j] = -1;
-    }
-}
-
-/* to get a first available row index based on column position in the board game
-    row index starts from 0
-    return -1 in case no available positions
-*/
-int getOpenRowFromCol(int **board, int col, int maxCol, int maxRow)
-{
-    if (!board || col > maxCol)
-        return -1;
-    for (int i = maxRow - 1; i >= 0; i--)
-    {
-        if (board[i][col] == -1)
-            return (i);
+        if (!(board[row] & (1UL << col)))
+        {
+            write(2, "getOpenedRowFromCol: ", 22);
+            ft_putnbr_lft_fd(row, 2);
+            write(2, "\n", 1);
+            return (row);
+        }
     }
     return (-1);
 }
 
-void    setChecker(int **board, int row, int col, int checker)
+void    setChecker(uint64_t board[MAX_SIZE], int rowMax, int row, int col)
 {
-    if (!board || row < 0 || col < 0)
-        return ;
-    board[row][col] = checker;
+    if (row >= rowMax)
+        return;
+    write(2, "setChecker: ", 13);
+        ft_putnbr_lft_fd(row, 2);
+        write(2, "\n", 1);
+    board[row] |= (1ULL << col);
 }
+

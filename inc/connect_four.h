@@ -1,12 +1,12 @@
 #ifndef CONNECT_FOUR_H
 # define CONNECT_FOUR_H
 
+# include <stdio.h>
 # include <stdlib.h>
 # include <stdint.h>
 # include <unistd.h>
 # include <time.h>
 # include "../lib/libft/libft.h"
-# include "colors.h"
 
 
 # define MAX_SIZE 60
@@ -30,27 +30,61 @@ typedef struct s_game
     int rows;
     int cols;
     int turn;
-    int *steps;
-    int **board;
+    int steps[MAX_SIZE * MAX_SIZE];
     uint64_t bp1[MAX_SIZE];
-    uint64_t bp2m[MAX_SIZE];
+    uint64_t bp2[MAX_SIZE];
+    uint64_t bmask[MAX_SIZE];
 
 }   t_game;
 
+void test();
+
+void    initGame(t_game *game);
 int     validateInput(int size, char **args, t_game *game);
+int    launchGame(t_game *game);
+int    usersTurn(t_game *game);
+void    robotsTurn(t_game *game);
+
+/**
+ * @brief display the current board
+ */
 void    printBoard(t_game *game);
 
-void    freeMemory(t_game *game);
-int     allocateMemory(t_game *game);
+/**
+ * @brief sets a bit at the given position
+ */
+void    setChecker(uint64_t board[MAX_SIZE], int rowMax, int row, int col);
+
+/**
+ * @brief gets a first available row index based on column position in the board game
+   @param col 0-based index of a playable column.
+   @return      int 0-based index of a playable row
+                -1 in a case no available positions
+*/
+int     getOpenedRowFromCol(uint64_t board[MAX_SIZE], int col, int maxCol, int maxRow);
+
+/**
+ * @brief validates if a position is empty
+ */
+int     isValidPosition (uint64_t board[MAX_SIZE], int row, int col);
+
+/**
+ * @brief        displays the game bit board
+ * @param bmask  The board mask includes player1 and player2 checkers
+ * @param bp     The board mask includes player1 checkers
+ * @param rowMax Maximum rows in the game board   
+ * @param colMax Maximum cloums in the game board   
+ */
+void    printBitBoard(uint64_t bmask[MAX_SIZE], uint64_t bp[MAX_SIZE], int rowMax, int colMax);
+
+/**
+ * @brief displays a message 'Game over'
+ */
 void    drawGame();
 
-int     isValidPosition (int **board, int row, int col);
-void    initBoard(t_game *game);
-int     getOpenRowFromCol(int **board, int col, int maxCol, int maxRow);
-void    setChecker(int **board, int row, int col, int checker);
 
 
-#endif
+#endif // CONNECT_FOUR_H
 
 /**
  * max board: 60 x 60
