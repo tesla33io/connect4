@@ -8,8 +8,16 @@
 # include "../lib/libft/libft.h"
 # include "colors.h"
 
-# define MAX_SIZE 60
 
+# define MAX_SIZE 60
+# define COLOR_GRAY  "\033[90m"
+# define COLOR_RED    "\033[91m"
+# define COLOR_GREEN  "\033[92m"
+# define COLOR_BLUE   "\033[94m"
+# define COLOR_MAGENTA "\033[95m"
+# define COLOR_CYAN   "\033[96m"
+# define COLOR_WHITE  "\033[97m"
+# define COLOR_RESET  "\033[0m"
 
 enum e_turn
 {

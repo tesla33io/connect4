@@ -21,9 +21,9 @@ void    usersTurn(t_game *game)
     while (1)
     {
         write(STDOUT_FILENO, "* Press 'q' to quit the game\n\n", 30);
-        write(STDOUT_FILENO, color_codes[COLOR_GREEN], ft_strlen(color_codes[COLOR_GREEN]));
+        write(STDOUT_FILENO, COLOR_GREEN, ft_strlen(COLOR_GREEN));
         write(STDOUT_FILENO, "Y O U R  T U R N : ", 20);
-        write(STDOUT_FILENO, color_codes[COLOR_RESET], ft_strlen(color_codes[COLOR_RESET]));
+        write(STDOUT_FILENO, COLOR_RESET, ft_strlen(COLOR_RESET));
         if (read(STDIN_FILENO, str, 100) > 0)
         {
             if (!ft_strncmp(str, "q", 1) || !ft_strncmp(str, "exit", 4))
@@ -87,6 +87,7 @@ int main(int ac, char **av)
     if (validateInput(ac, av, &game) != 0)
         return (-1);
     srand(time(NULL));
+    // game.bp1[MAX_SIZE] = {0};
     if (allocateMemory(&game) != 0)
         return (-1);
     game.turn = rand() % 2;
