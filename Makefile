@@ -9,7 +9,7 @@ CC				:= cc
 CFLAGS			:= -Wall -Werror -Wextra -O3
 
 # Libraries to be linked (if any)
-LIBS			:=
+LIBS			= -L $(LFT_PATH) -lft
 
 # Include directories
 INCLUDES		:= -Iinc/
@@ -21,7 +21,12 @@ TARGET			:= connect4
 SRC_DIR			:= src/
 
 # Source files
-SRC_FILES		+= main.c
+SRC_FILES		+= main.c  
+SRC_FILES		+= tui/board_utils.c  
+SRC_FILES		+= tui/colors.c  
+SRC_FILES		+= tui/printBoard.c  
+SRC_FILES		+= tui/utilsMemory.c  
+SRC_FILES		+= tui/gameState.c  
 
 # Object files directory
 OBJ_DIR			:= obj/
@@ -50,6 +55,8 @@ TOUCH			:= /bin/touch
 ###### LOCAL LIBRARIES ######
 #############################
 
+LFT_PATH		:= lib/libft
+LFT_BIN			:=$(LFT_PATH)/libft.a
 
 ############################
 ###### DEBUG SETTINGS ######
@@ -74,7 +81,7 @@ $(OBJ_DIR)%.o: $(SRC_DIR)%.c
 	$(CC) $(CFLAGS) -MMD -MF $(patsubst %.o, %.d, $@) $(INCLUDES) -c $< -o $@
 
 # Rule for linking the target executable
-$(TARGET): $(OBJ_FILES)
+$(TARGET): $(OBJ_FILES) $(LFT_BIN)
 	$(CC) $(CFLAGS) -o $(TARGET) $(OBJ_FILES) $(INCLUDES) $(LIBS)
 	-@echo -n "🚀 $(MAGENTA)" && ls -lah $(TARGET) && echo -n "$(RESET)"
 
@@ -83,18 +90,22 @@ $(TARGET): $(OBJ_FILES)
 ###### LOCAL LIBS COMPILATION ######
 ####################################
 
+$(LFT_BIN):
+	@make -C $(LFT_PATH)
 
 ##############################
 ###### ADDITIONAL RULES ######
 ##############################
 
 clean: ## Clean objects and dependencies
+	@make -C $(LFT_PATH) clean
 	$(RM) $(OBJ_FILES)
 	$(RM) -r $(OBJ_DIR)
 	$(RM) $(DEPENDS)
 	$(RM) -r $(DEP_DIR)
 
 fclean: clean ## Restore project to initial state
+	@make -C $(LFT_PATH) fclean
 	$(RM) $(TARGET)
 
 re: fclean all ## Rebuild project
