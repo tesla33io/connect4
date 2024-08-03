@@ -1,6 +1,7 @@
 #include "../inc/connect_four.h"
+#include "../inc/bonus_sdl2.h"
 
-/* int main(int ac, char **av)
+int main(int ac, char **av)
 {
     t_game  game;
 
@@ -10,26 +11,37 @@
         return (-1);
     srand(time(NULL));
     game.turn = rand() % 2;
+    if (game.visual == 1)
+        return (runGameVisual(&game));
     initGame(&game);
     if (launchGame(&game) == -1)
         return (-1);
     return (0);
-} */
+}
 
 int    launchGame(t_game *game)
 {
     while (1)
     {
-        test();
         printBoard(game);
         printBitBoard(game->bmask, game->bp1, game->rows, game->cols);
         if (game->turn % 2 == 0)
         {
             if (usersTurn(game) == -1)
                 return (-1);
+            if (isWinner(game->bp1, game->rows, game->cols))
+            {
+                return (printBoard(game), ft_putendl_fd("\tUSER THE WINNER!", 1), 1);
+            }
         }
         else
-            robotsTurn(game);
+        {
+            botTurn(game);
+            if (isWinner(game->bp2, game->rows, game->cols))
+            {
+                return (printBoard(game), ft_putendl_fd("\tBOT THE WINNER!", 1), 1);
+            }
+        }
         if (game->turn >= (game->cols * game->rows))
             return (printBoard(game), drawGame(), 1);
     }
@@ -43,9 +55,7 @@ int    usersTurn(t_game *game)
     while (1)
     {
         write(STDOUT_FILENO, "* Press 'q' to quit the game\n\n", 30);
-        write(STDOUT_FILENO, COLOR_GREEN, ft_strlen(COLOR_GREEN));
-        write(STDOUT_FILENO, "Y O U R  T U R N : ", 20);
-        write(STDOUT_FILENO, COLOR_RESET, ft_strlen(COLOR_RESET));
+        displayUserMsg();
         if (read(STDIN_FILENO, str, 100) > 0)
         {
             if (!ft_strncmp(str, "q", 1) || !ft_strncmp(str, "exit", 4))
@@ -66,7 +76,7 @@ int    usersTurn(t_game *game)
     return (0);
 }
 
-void    robotsTurn(t_game *game)
+void    botTurn(t_game *game)
 {
     while (1)
     {

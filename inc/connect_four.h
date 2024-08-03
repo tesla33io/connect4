@@ -10,6 +10,11 @@
 
 
 # define MAX_SIZE 60
+# define MIN_ROWS 6
+# define MIN_COLS 7
+# define TRUE 1
+# define FALSE 0
+
 # define COLOR_GRAY  "\033[90m"
 # define COLOR_RED    "\033[91m"
 # define COLOR_GREEN  "\033[92m"
@@ -22,14 +27,17 @@
 enum e_turn
 {
     USER,
-    ROBOT,
+    BOT,
 };
 
 typedef struct s_game
 {
+    int visual;
     int rows;
     int cols;
     int turn;
+    int winner;
+    int scale;
     int steps[MAX_SIZE * MAX_SIZE];
     uint64_t bp1[MAX_SIZE];
     uint64_t bp2[MAX_SIZE];
@@ -37,13 +45,13 @@ typedef struct s_game
 
 }   t_game;
 
-void test();
 
 void    initGame(t_game *game);
 int     validateInput(int size, char **args, t_game *game);
 int    launchGame(t_game *game);
 int    usersTurn(t_game *game);
-void    robotsTurn(t_game *game);
+void    botTurn(t_game *game);
+int isWinner(uint64_t board[MAX_SIZE], int rowMax, int colMax);
 
 /**
  * @brief display the current board
@@ -73,7 +81,7 @@ int     isValidPosition (uint64_t board[MAX_SIZE], int row, int col);
  * @param bmask  The board mask includes player1 and player2 checkers
  * @param bp     The board mask includes player1 checkers
  * @param rowMax Maximum rows in the game board   
- * @param colMax Maximum cloums in the game board   
+ * @param colMax Maximum columns in the game board   
  */
 void    printBitBoard(uint64_t bmask[MAX_SIZE], uint64_t bp[MAX_SIZE], int rowMax, int colMax);
 
@@ -83,6 +91,8 @@ void    printBitBoard(uint64_t bmask[MAX_SIZE], uint64_t bp[MAX_SIZE], int rowMa
 void    drawGame();
 
 
+int runGameVisual(t_game *game);
+void    displayUserMsg(void);
 
 #endif // CONNECT_FOUR_H
 

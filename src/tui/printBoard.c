@@ -1,6 +1,6 @@
 #include "../../inc/connect_four.h"
 
-void    printTurn_n_pos(t_game *game);
+void           printTurn_n_pos(t_game *game);
 static void    displayeTitle();
 
 void    printBoard(t_game *game)
@@ -78,13 +78,13 @@ void    printBitBoard(uint64_t bmask[MAX_SIZE], uint64_t bp[MAX_SIZE], int rowMa
         for (int c = 0; c < colMax; c++)
         {
             if (bp[r] & (1UL << c))
-                printf("X ");
+                ft_putstr_fd("X ", 1);
             else if ((bmask[r] & (1UL << c)) && !(bp[r] & (1UL << c)))
-                printf("O ");
+                ft_putstr_fd("O ", 1);
             else
-                printf(". ");
+                ft_putstr_fd(". ", 1);
         }
-        printf("\n");
+        ft_putstr_fd("\n", 1);
     }
 }
 
