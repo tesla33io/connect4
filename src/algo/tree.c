@@ -6,7 +6,7 @@
 /*   By: astavrop <astavrop@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 22:05:32 by astavrop          #+#    #+#             */
-/*   Updated: 2024/08/03 00:29:47 by astavrop         ###   ########.fr       */
+/*   Updated: 2024/08/03 14:58:18 by astavrop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ t_TreeNode	*tree_new(uint64_t sbp1[MAX_SIZE], uint64_t sbp2[MAX_SIZE],
 	new_node->wins = 0;
 	new_node->sims = 0;
 	new_node->parent = NULL;
-	new_node->children = NULL;
+	new_node->children = gc_malloc(sizeof(t_TreeNode) * MAX_SIZE);
 	new_node->num_children = 0;
 	new_node->player_to_move = player;
 	new_node->last_move_col = lmc;

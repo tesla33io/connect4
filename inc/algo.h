@@ -6,7 +6,7 @@
 /*   By: astavrop <astavrop@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 19:26:40 by astavrop          #+#    #+#             */
-/*   Updated: 2024/08/03 00:09:13 by astavrop         ###   ########.fr       */
+/*   Updated: 2024/08/03 15:01:12 by astavrop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,12 @@ typedef struct	s_TreeNode {
 	int					last_move_col;
 }				t_TreeNode;
 
+typedef struct	s_AlgoSettings {
+	uint8_t		dificulty;	// Number of simulations per node
+	uint8_t		wi;			// width
+	uint8_t		he;			// height
+}				t_Settings;
+
 # define MEMALLOC_FAIL "memory allocation failed"
 # define INVALID_FUNC_ARGS "invalid function arguments"
 
@@ -39,6 +45,8 @@ typedef struct	s_TreeNode {
 
 /* Algo (alog.c) */
 
+int				sim_rand_game(t_TreeNode *parent, t_Settings *as);
+void			apply_move(t_TreeNode *node, int col, int player);
 int				check_winner(uint64_t bp[MAX_SIZE], int player);
 int				check_terminal_state(t_TreeNode *node);
 
@@ -53,6 +61,7 @@ int				on_crash_code(char *msg, int code, char *file, int line);
 void			*on_crash_null(char *msg, char *file, int line);
 
 void			copy_board_row(uint64_t src[MAX_SIZE], uint64_t dest[MAX_SIZE]);
+int				is_valid_move(t_TreeNode *node, uint8_t col, uint8_t dificulty);
 
 double			ft_sqrt(double x);
 double			ft_ln(double x);

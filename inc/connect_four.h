@@ -9,6 +9,7 @@
 # include "../lib/libft/libft.h"
 
 
+
 # define MAX_SIZE 60
 # define MIN_ROWS 6
 # define MIN_COLS 7

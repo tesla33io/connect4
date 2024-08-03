@@ -6,7 +6,7 @@
 /*   By: astavrop <astavrop@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 19:24:23 by astavrop          #+#    #+#             */
-/*   Updated: 2024/08/02 23:38:19 by astavrop         ###   ########.fr       */
+/*   Updated: 2024/08/03 14:48:25 by astavrop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,11 @@ void	copy_board_row(uint64_t src[MAX_SIZE], uint64_t dest[MAX_SIZE])
 {
 	for (int i = 0; i < MAX_SIZE; ++i)
 		dest[i] = src[i];
+}
+
+int is_valid_move(t_TreeNode *node, uint8_t col, uint8_t dificulty)
+{
+	return !(node->mask[dificulty - 1] & (1ULL << col));
 }
 
 double ft_sqrt(double x)
