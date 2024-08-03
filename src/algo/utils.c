@@ -6,7 +6,7 @@
 /*   By: astavrop <astavrop@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 19:24:23 by astavrop          #+#    #+#             */
-/*   Updated: 2024/08/03 14:48:25 by astavrop         ###   ########.fr       */
+/*   Updated: 2024/08/03 20:07:01 by astavrop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,15 +36,50 @@ void	*on_crash_null(char *msg, char *file, int line)
 	return (NULL);
 }
 
-void	copy_board_row(uint64_t src[MAX_SIZE], uint64_t dest[MAX_SIZE])
+void	copy_board(uint64_t *src, uint64_t *dest, uint8_t max)
 {
-	for (int i = 0; i < MAX_SIZE; ++i)
+	for (int i = 0; i < max; ++i)
 		dest[i] = src[i];
+}
+
+void	clear_board(uint64_t *b, uint8_t max)
+{
+	for (int i = 0; i < max; ++i)
+		b[i] = 0;
+}
+
+int	fill_mask(uint64_t *mask, uint64_t *b1, uint64_t *b2, uint8_t rmax,
+	uint8_t cmax)
+{
+	if (!mask)
+	{
+		mask = gc_malloc(sizeof(uint64_t) * rmax);
+		if (!mask)
+			return (on_crash_code(MEMALLOC_FAIL, 1, __FILE__, __LINE__));
+	}
+	for (int r = 0; r < rmax; ++r)
+	{
+		for (int c = 0; c < cmax; ++c)
+		{
+			mask[r] = b1[r] | b2[r];
+		}
+	}
+	return (0);
 }
 
 int is_valid_move(t_TreeNode *node, uint8_t col, uint8_t dificulty)
 {
 	return !(node->mask[dificulty - 1] & (1ULL << col));
+}
+
+uint8_t	i_in(uint8_t *arr, uint8_t i, uint8_t max)
+{
+	for (int j = 0; j < max; ++j)
+	{
+		if (arr[j] == i)
+			return (1);
+	}
+	return (0);
 }
 
 double ft_sqrt(double x)

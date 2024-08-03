@@ -6,7 +6,7 @@
 /*   By: astavrop <astavrop@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 19:13:11 by astavrop          #+#    #+#             */
-/*   Updated: 2024/08/04 19:20:00 by astavrop         ###   ########.fr       */
+/*   Updated: 2024/08/04 19:21:52 by astavrop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <math.h> /* DELETE */
 
 /* int	main(int ac, char *av[])
 {
@@ -24,22 +25,98 @@
 	(void)ac;
 	(void)av;
 	uint64_t	bp1[MAX_SIZE], bp2[MAX_SIZE] = {0};
+	clear_board(bp1, MAX_SIZE);
+	clear_board(bp2, MAX_SIZE);
 	t_TreeNode	*node = tree_new(bp1, bp2, 1, -1);
+	node->bp1[0] = 1ULL << 3;
 	t_Settings	as;
-	as.dificulty = 5;
-	as.wi = 7;
-	as.he = 6;
-	sim_rand_game(node, &as);
+	as.wi = 10;
+	as.he = 10;
+	as.dificulty = 5 % as.wi;
+	as.depth = 3;
+	build_tree(node, &as);
 	return (0);
-} */
+}
+*/
+
+int	build_tree(t_TreeNode *root, t_Settings *as)
+{
+	// used to store prev nodes to be able to go back
+	t_list	*stack = ft_lstnew((void*) root);
+	if (!stack)
+		return (on_crash_code(MEMALLOC_FAIL, -1, __FILE_NAME__, __LINE__));
+	// priority queue, store nodes to visit depending on their score
+	t_deque	*priority = gc_malloc(sizeof(*priority));
+	if (!priority)
+		return (on_crash_code(MEMALLOC_FAIL, -1, __FILE_NAME__, __LINE__));
+	t_TreeNode	*cur = root;
+	int			total_N = 0;
+	while (1)
+	{
+		printf("Root [%p]\n", (void *) cur);
+		fill_mask(cur->mask, cur->bp1, cur->bp2, MAX_SIZE, MAX_SIZE);
+		printBitBoard(cur->mask, cur->bp1, as->he, as->wi);
+		uint8_t	played_moves[as->dificulty];
+		uint8_t	n_played_moves = 0;
+		uint8_t	rollout = 0;
+		for (int c = 0; c < as->dificulty; ++c)
+		{
+			t_TreeNode	*child = tree_new(cur->bp1, cur->bp2,
+					3 - cur->player_to_move, -1);
+
+			// Find valid moves
+			uint8_t	valid_moves[as->dificulty];
+			uint8_t	n_valid_moves = 0;
+			for (uint8_t col = 0; col < as->wi; ++col)
+			{
+				if (is_valid_move(child, col, as->dificulty)
+					&& !i_in(played_moves, col, as->dificulty))
+					valid_moves[n_valid_moves++] = col;
+			}
+			if (n_valid_moves > 0)
+			{
+				uint8_t	move = valid_moves[rand() % n_valid_moves];
+				apply_move(child, move, child->player_to_move);
+				played_moves[n_played_moves++] = move;
+				rollout = sim_rand_game(child, as);
+				if (rollout == cur->player_to_move)
+					(cur->wins++, child->wins++);
+				else if (rollout == 3 - cur->player_to_move)
+					(cur->wins--, child->wins--);
+				cur->vis++;
+				child->vis++;
+			}
+			printf("Child [%d] [%p]\n", c, (void *) child);
+			fill_mask(child->mask, child->bp1, child->bp2, MAX_SIZE, MAX_SIZE);
+			printBitBoard(child->mask, child->bp1, as->he, as->wi);
+		}
+		total_N += cur->vis;
+		printf("========\nUTC\n========\n");
+		printf("w=%d n=%d N=%d c=%f\n",
+				cur->wins, cur->vis, total_N, ft_sqrt(2));
+		printf("%f\n",
+				(
+				 ((double) cur->wins/cur->vis)
+				 +
+				 ft_sqrt(2)
+				 *
+				 ft_sqrt(
+					 log((double) total_N)/cur->vis
+					 )
+				)
+			  );
+		break ;
+	}
+	return (0);
+}
 
 int	sim_rand_game(t_TreeNode *parent, t_Settings *as)
 {
 	if (!parent || !as)
-		return (on_crash_code(INVALID_FUNC_ARGS, -1, __FILE__, __LINE__));
+		return (on_crash_code(INVALID_FUNC_ARGS, -1, __FILE_NAME__, __LINE__));
 	t_TreeNode	sim_node = *parent;
-	for (int i = 0; i < as->dificulty; ++i)
-		sim_node.children[i] = NULL;
+//	for (int i = 0; i < as->dificulty; ++i)
+//		sim_node.children[i] = NULL;
 
 	int	result = 0;
 	// Play random game
@@ -65,10 +142,8 @@ int	sim_rand_game(t_TreeNode *parent, t_Settings *as)
 			apply_move(&sim_node, move, sim_node.player_to_move);
 			sim_node.player_to_move = 3 - sim_node.player_to_move;
 		}
-		printBitBoard(sim_node.mask, sim_node.bp1, as->he, as->wi);
-		ft_putstr_fd("-- -- -- -- --\n", 1);
 	}
-	return (0);
+	return (result);
 }
 
 void	apply_move(t_TreeNode *node, int col, int player)
