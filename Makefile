@@ -9,7 +9,7 @@ CC				:= cc
 CFLAGS			:= -Wall -Werror -Wextra -O3 -g
 
 # Libraries to be linked (if any)
-LIBS			= -L $(LFT_PATH) -lft
+LIBS			= -L $(LFT_PATH) -lft -I/usr/local/include/SDL2 -D_THREAD_SAFE -L/usr/local/lib -lSDL2 
 
 # Include directories
 INCLUDES		:= -Iinc/
@@ -29,6 +29,13 @@ SRC_FILES		+= tui/gameState.c
 SRC_FILES		+= algo/algo.c
 SRC_FILES		+= algo/tree.c
 SRC_FILES		+= algo/utils.c
+SRC_FILES		+= algo/winner_state.c
+
+# bonus related files
+SRC_FILES		+= bonus/run_game_visual.c
+SRC_FILES		+= bonus/process_input.c
+SRC_FILES		+= bonus/execute_turns.c
+SRC_FILES		+= bonus/render_board.c
 
 
 # Object files directory
@@ -87,6 +94,7 @@ $(TARGET): $(OBJ_FILES) $(LFT_BIN)
 	$(CC) $(CFLAGS) -o $(TARGET) $(OBJ_FILES) $(INCLUDES) $(LIBS)
 	-@echo -n "🚀 $(MAGENTA)" && ls -lah $(TARGET) && echo -n "$(RESET)"
 
+#-lSDL2 $(sdl2-config --cflags --libs)
 
 ####################################
 ###### LOCAL LIBS COMPILATION ######
