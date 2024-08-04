@@ -2,13 +2,17 @@
 # define BONUS_SDL2_H
 
 # include <stdio.h>
-# include <SDL2/SDL.h>
-# include <SDL2/SDL_timer.h>
+#include </opt/homebrew/include/SDL2/SDL.h>
+#include </opt/homebrew/include/SDL2/SDL_timer.h>
+#include </opt/homebrew/include/SDL2/SDL_render.h>
+
+// # include <SDL2/SDL.h>
+// # include <SDL2/SDL_timer.h>
 // #include <SDL_ttf.h>
 // #include <SDL2/SDL_ttf.h> 
 #include "connect_four.h"
 
-# define TILE_SIZE(n) (80 * n)
+# define TILE_SIZE(n) (100 * n)
 # define ANIMATION_SPEED 1
 # define MARGINE 1
 # define WINDOW_WIDTH(col, n) (col * TILE_SIZE(n))
@@ -21,6 +25,14 @@ typedef struct s_gameVisual
 	u_int32_t	*colorBuf;
     int         isGameRunning;
 }   t_gameVisual;
+
+typedef struct s_rgba
+{
+    int r;
+    int g;
+    int b;
+    int a;
+}   t_rgba;
 
 void    processInput(t_gameVisual *gameVis, t_game *game);
 int     executeUserTurnVisual(t_game *game, int x, int y);
