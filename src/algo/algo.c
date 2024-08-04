@@ -6,7 +6,7 @@
 /*   By: astavrop <astavrop@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 19:13:11 by astavrop          #+#    #+#             */
-/*   Updated: 2024/08/04 19:21:52 by astavrop         ###   ########.fr       */
+/*   Updated: 2024/08/04 19:23:36 by astavrop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,27 +14,29 @@
 #include "../../inc/algo.h"
 
 #include <stdint.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <time.h>
-#include <math.h> /* DELETE */
 
 /* int	main(int ac, char *av[])
 {
 	srand(time(NULL));
 	(void)ac;
 	(void)av;
-	uint64_t	bp1[MAX_SIZE], bp2[MAX_SIZE] = {0};
-	clear_board(bp1, MAX_SIZE);
-	clear_board(bp2, MAX_SIZE);
-	t_TreeNode	*node = tree_new(bp1, bp2, 1, -1);
-	node->bp1[0] = 1ULL << 3;
 	t_Settings	as;
 	as.wi = 10;
 	as.he = 10;
-	as.dificulty = 5 % as.wi;
+	as.dificulty = 5;
 	as.depth = 3;
-	build_tree(node, &as);
+	uint64_t	bp1[MAX_SIZE], bp2[MAX_SIZE] = {0};
+	clear_board(bp1, MAX_SIZE);
+	clear_board(bp2, MAX_SIZE);
+	t_TreeNode	*node = tree_new(bp1, bp2, 1, as.dificulty);
+	node->bp1[0] = 1ULL << 3;
+	printf("Suggested move: %d\n", build_tree(node, &as));
+	gc_free_gc(0);
 	return (0);
 }
 */
@@ -49,20 +51,78 @@ int	build_tree(t_TreeNode *root, t_Settings *as)
 	t_deque	*priority = gc_malloc(sizeof(*priority));
 	if (!priority)
 		return (on_crash_code(MEMALLOC_FAIL, -1, __FILE_NAME__, __LINE__));
-	t_TreeNode	*cur = root;
-	int			total_N = 0;
-	while (1)
+	priority->head = NULL;
+	priority->size = 0;
+
+	uint64_t	nnode = 0;
+	uint8_t		pm[as->dificulty];
+	uint8_t		n_pm = 0;
+
+	// Create first five random next positions
+	for (int c = 0; c < as->dificulty; ++c)
 	{
-		printf("Root [%p]\n", (void *) cur);
-		fill_mask(cur->mask, cur->bp1, cur->bp2, MAX_SIZE, MAX_SIZE);
-		printBitBoard(cur->mask, cur->bp1, as->he, as->wi);
-		uint8_t	played_moves[as->dificulty];
-		uint8_t	n_played_moves = 0;
+
 		uint8_t	rollout = 0;
+		t_TreeNode	*child = tree_new(root->bp1, root->bp2,
+				3 - root->player_to_move, as->dificulty);
+		root->children[c] = child;
+		child->parent = root;
+		nnode++;
+
+		// Find valid moves
+		uint8_t	valid_moves[as->dificulty];
+		uint8_t	n_valid_moves = 0;
+		for (uint8_t col = 0; col < as->wi; ++col)
+		{
+			if (is_valid_move(child, col, as->dificulty)
+					&& !i_in(pm, col, as->dificulty))
+				valid_moves[n_valid_moves++] = col;
+		}
+		if (n_valid_moves > 0)
+		{
+			uint8_t	move = valid_moves[rand() % n_valid_moves];
+			child->move_made = move;
+			apply_move(child, move, child->player_to_move);
+			pm[n_pm++] = move;
+			rollout = simulate(child, as);
+			if (rollout == root->player_to_move)
+			{
+				root->wins++;
+				child->wins++;
+			}
+			else if (rollout == 3 - root->player_to_move)
+			{
+				root->wins--;
+				child->wins--;
+			}
+			root->vis++;
+			child->vis++;
+
+			double	exploi = ((double) rollout == root->player_to_move ? 1:0 / child->vis);
+			double	explor  = EXPLOR_CONST * ft_sqrt(ft_ln((double) root->vis) / child->vis);
+			child->score = exploi + explor;
+
+			deque_emplace_back(priority, (void *) child);
+		}
+	}
+	while (nnode < (5*5*5*5))
+	{
+		// printf("nnode:%ld\n", nnode);
+		uint8_t		played_moves[as->dificulty];
+		uint8_t		n_played_moves = 0;
+		t_deque_node	*to_explore = deque_pop_front(priority);
+		t_TreeNode		*cur = (t_TreeNode *) to_explore->data;
+		gc_free_ptr((void **) &to_explore);
+
 		for (int c = 0; c < as->dificulty; ++c)
 		{
+
+			uint8_t	rollout = 0;
 			t_TreeNode	*child = tree_new(cur->bp1, cur->bp2,
-					3 - cur->player_to_move, -1);
+					3 - cur->player_to_move, as->dificulty);
+			child->parent = cur;
+			cur->children[c] = child;
+			nnode++;
 
 			// Find valid moves
 			uint8_t	valid_moves[as->dificulty];
@@ -70,64 +130,83 @@ int	build_tree(t_TreeNode *root, t_Settings *as)
 			for (uint8_t col = 0; col < as->wi; ++col)
 			{
 				if (is_valid_move(child, col, as->dificulty)
-					&& !i_in(played_moves, col, as->dificulty))
+						&& !i_in(played_moves, col, as->dificulty))
 					valid_moves[n_valid_moves++] = col;
 			}
 			if (n_valid_moves > 0)
 			{
 				uint8_t	move = valid_moves[rand() % n_valid_moves];
+				child->move_made = move;
 				apply_move(child, move, child->player_to_move);
 				played_moves[n_played_moves++] = move;
-				rollout = sim_rand_game(child, as);
+				rollout = simulate(child, as);
 				if (rollout == cur->player_to_move)
-					(cur->wins++, child->wins++);
+					child->wins++;
 				else if (rollout == 3 - cur->player_to_move)
-					(cur->wins--, child->wins--);
-				cur->vis++;
+					child->wins--;
 				child->vis++;
+
+				double	exploi = ((double) rollout == cur->player_to_move ? 1:0 / child->vis);
+				double	explor  = EXPLOR_CONST * ft_sqrt(ft_ln((double) cur->vis) / child->vis);
+				child->score = exploi + explor;
+
+				deque_emplace_back(priority, (void *) child);
 			}
-			printf("Child [%d] [%p]\n", c, (void *) child);
-			fill_mask(child->mask, child->bp1, child->bp2, MAX_SIZE, MAX_SIZE);
-			printBitBoard(child->mask, child->bp1, as->he, as->wi);
 		}
-		total_N += cur->vis;
-		printf("========\nUTC\n========\n");
-		printf("w=%d n=%d N=%d c=%f\n",
-				cur->wins, cur->vis, total_N, ft_sqrt(2));
-		printf("%f\n",
-				(
-				 ((double) cur->wins/cur->vis)
-				 +
-				 ft_sqrt(2)
-				 *
-				 ft_sqrt(
-					 log((double) total_N)/cur->vis
-					 )
-				)
-			  );
-		break ;
+		backpropagate(cur, as);
 	}
-	return (0);
+	double		best_score = -9999999;
+	t_TreeNode	*best_node = NULL;
+	for (int i = 0; i < as->dificulty; ++i)
+	{
+		if (root->children[i]->score > best_score)
+		{
+			best_score = root->children[i]->score;
+			best_node = root->children[i];
+		}
+		// printf("[%d] %f\n", i, root->children[i]->score);
+		// printf("[%d] w:%d v:%d\n\n", i, root->children[i]->wins, root->children[i]->vis);
+	}
+	return (best_node->move_made);
 }
 
-int	sim_rand_game(t_TreeNode *parent, t_Settings *as)
+void	backpropagate(t_TreeNode *parent, t_Settings *as)
+{
+	double		best_score = -9999999;
+	t_TreeNode	*best_node = NULL;
+	t_TreeNode	*child = NULL;
+	for (int c = 0; c < as->dificulty; ++c)
+	{
+		child = parent->children[c];
+		parent->wins += child->wins;
+		parent->vis += child->vis;
+	//	double	score = (((double) child->wins / child->vis)
+	//		+ EXPLOR_CONST * ft_sqrt(ft_ln(parent->vis) / child->vis));
+		double	score = (double) child->wins / child->vis;
+		if (score > best_score)
+		{
+			best_score = score;
+			best_node = child;
+		}
+	}
+	if (best_node)
+		parent->score = best_score;
+	if (parent->parent)
+		backpropagate(parent->parent, as);
+}
+
+int	simulate(t_TreeNode *parent, t_Settings *as)
 {
 	if (!parent || !as)
 		return (on_crash_code(INVALID_FUNC_ARGS, -1, __FILE_NAME__, __LINE__));
 	t_TreeNode	sim_node = *parent;
-//	for (int i = 0; i < as->dificulty; ++i)
-//		sim_node.children[i] = NULL;
 
 	int	result = 0;
 	// Play random game
 	while (1)
 	{
 		if ((result = check_terminal_state(&sim_node)) != 0)
-		{
-			ft_putnbr_lft_fd(result, 1);
-			ft_putendl_fd("", 1);
 			break ;
-		}
 		// Find valid moves
 		uint8_t	valid_moves[as->dificulty];
 		uint8_t	n_valid_moves = 0;

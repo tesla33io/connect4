@@ -6,7 +6,7 @@
 /*   By: astavrop <astavrop@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 19:26:40 by astavrop          #+#    #+#             */
-/*   Updated: 2024/08/03 21:42:02 by astavrop         ###   ########.fr       */
+/*   Updated: 2024/08/04 19:10:34 by astavrop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,14 +24,14 @@ typedef struct	s_TreeNode {
 	uint64_t			*bp1;
 	uint64_t			*bp2;
 	uint64_t			*mask;
-	int					score; // not sure if it's gonna be used
+	double				score; // not sure if it's gonna be used
 	int					wins;
 	int					vis;
 	struct s_TreeNode	*parent;
 	struct s_TreeNode	**children;
 	int					num_children;
 	int					player_to_move;
-//	int					last_move_col;
+	uint8_t				move_made;
 }				t_TreeNode;
 
 typedef struct	s_AlgoSettings {
@@ -46,12 +46,14 @@ typedef struct	s_AlgoSettings {
 
 # define EULER_CONST 2.718281828459045235
 # define TAYLOR_ITERATIONS 20
+# define EXPLOR_CONST 1.414213562
 # define FABS(x) ((x) > 0 ? (x) : -(x))
 
 /* Algo (alog.c) */
 
 int				build_tree(t_TreeNode *root, t_Settings *as);
-int				sim_rand_game(t_TreeNode *parent, t_Settings *as);
+int				simulate(t_TreeNode *parent, t_Settings *as);
+void			backpropagate(t_TreeNode *parent, t_Settings *as);
 void			apply_move(t_TreeNode *node, int col, int player);
 int				check_winner(uint64_t bp[MAX_SIZE], int player);
 int				check_terminal_state(t_TreeNode *node);
@@ -59,7 +61,7 @@ int				check_terminal_state(t_TreeNode *node);
 /* Tree (tree.c) */
 
 t_TreeNode		*tree_new(uint64_t sbp1[MAX_SIZE], uint64_t sbp2m[MAX_SIZE],
-	int player, int lmc);
+	int player, int nc);
 
 /* Utils (utils.c) */
 
