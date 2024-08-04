@@ -6,7 +6,7 @@
 /*   By: ohladkov <ohladkov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/16 18:59:08 by astavrop          #+#    #+#             */
-/*   Updated: 2024/04/06 18:54:12 by ohladkov         ###   ########.fr       */
+/*   Updated: 2024/08/04 12:59:19 by ohladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ char	*append(char *content, char *buffer)
 {
 	char	*temp;
 
-	temp = ft_strjoin(content, buffer);
+	temp = ft_strjoin_gnl(content, buffer);
 	free(content);
 	return (temp);
 }
@@ -30,8 +30,8 @@ char	*read_file(int fd, char *content)
 	int			b_read;
 
 	if (!content)
-		content = ft_calloc(1, 1);
-	read_buffer = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
+		content = ft_calloc_gnl(1, 1);
+	read_buffer = ft_calloc_gnl(BUFFER_SIZE + 1, sizeof(char));
 	b_read = 1;
 	while (b_read > 0)
 	{
@@ -43,7 +43,7 @@ char	*read_file(int fd, char *content)
 		}
 		read_buffer[b_read] = '\0';
 		content = append(content, read_buffer);
-		if (ft_strchr(read_buffer, '\n'))
+		if (ft_strchr_gnl(read_buffer, '\n'))
 			break ;
 	}
 	free(read_buffer);
@@ -60,7 +60,7 @@ char	*get_line(char *buffer)
 		return (NULL);
 	while (buffer[i] && buffer[i] != '\n')
 		i++;
-	line = ft_calloc(i + 2, sizeof(char));
+	line = ft_calloc_gnl(i + 2, sizeof(char));
 	i = 0;
 	while (buffer[i] && buffer[i] != '\n')
 	{
@@ -87,7 +87,7 @@ char	*get_next(char *buffer)
 		free(buffer);
 		return (NULL);
 	}
-	new_buffer = ft_calloc((ft_strlen(buffer) - i + 1), sizeof(char));
+	new_buffer = ft_calloc_gnl((ft_strlen_gnl(buffer) - i + 1), sizeof(char));
 	i++;
 	j = 0;
 	while (buffer[i])

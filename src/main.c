@@ -24,8 +24,10 @@ int    launchGame(t_game *game)
 {
     while (1)
     {
-        printBoard(game);
-        printBitBoard(game->bmask, game->bp1, game->rows, game->cols);
+        if (game->cols < 15)
+            printBoard(game);
+        else
+            printBitBoard(game->bmask, game->bp1, game->rows, game->cols);
         if (game->turn % 2 == 0)
         {
             if (usersTurn(game) == -1)
@@ -51,28 +53,34 @@ int    launchGame(t_game *game)
 
 int    usersTurn(t_game *game)
 {
-    char str[100];
+    char *str = NULL;
     int col;
     while (1)
     {
         write(STDOUT_FILENO, "* Press 'q' to quit the game\n\n", 30);
         displayUserMsg();
-        if (read(STDIN_FILENO, str, 100) > 0)
+        str = get_next_line(STDIN_FILENO);
+        if (!str)
+            return (-1);
+        if (!ft_strncmp(str, "q", 1) || !ft_strncmp(str, "exit", 4))
         {
-            if (!ft_strncmp(str, "q", 1) || !ft_strncmp(str, "exit", 4))
-                return (-1);
-            col = ft_atoi(str) - 1;
-            if (col < 0 || col >= game->cols)
-                continue;
-            int row = getOpenedRowFromCol(game->bmask, col, game->cols, game->rows);
-            if (row == -1)
-                continue;
-            setChecker(game->bp1, game->rows, row, col);
-            setChecker(game->bmask, game->rows, row, col);
-            game->steps[game->turn] = col + 1;
-            game->turn += 1;
-            return (0);
+            free(str);
+            str = NULL;
+            return (-1);
         }
+        col = ft_atoi(str) - 1;
+        free(str);
+        str = NULL;
+        if (col < 0 || col >= game->cols)
+            continue;
+        int row = getOpenedRowFromCol(game->bmask, col, game->cols, game->rows);
+        if (row == -1)
+            continue;
+        setChecker(game->bp1, game->rows, row, col);
+        setChecker(game->bmask, game->rows, row, col);
+        game->steps[game->turn] = col + 1;
+        game->turn += 1;
+        return (0);
     }
     return (0);
 }

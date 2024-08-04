@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: astavrop <astavrop@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: ohladkov <ohladkov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/16 19:00:38 by astavrop          #+#    #+#             */
-/*   Updated: 2023/12/16 19:48:10 by astavrop         ###   ########.fr       */
+/*   Updated: 2024/08/04 13:00:58 by ohladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 #include <stdlib.h>
 
-void	ft_bzero(void *s, size_t n)
+void	ft_bzero_gnl(void *s, size_t n)
 {
 	char	*str;
 	size_t	i;
@@ -27,18 +27,18 @@ void	ft_bzero(void *s, size_t n)
 	}
 }
 
-void	*ft_calloc(size_t nmem, size_t size)
+void	*ft_calloc_gnl(size_t nmem, size_t size)
 {
 	char	*content;
 
 	content = malloc(size * nmem);
 	if (!content)
 		return (NULL);
-	ft_bzero(content, size * nmem);
+	ft_bzero_gnl(content, size * nmem);
 	return (content);
 }
 
-char	*ft_strjoin(char const *s1, char const *s2)
+char	*ft_strjoin_gnl(char const *s1, char const *s2)
 {
 	int		sizetotal;
 	char	*content;
@@ -46,7 +46,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	int		j;
 
 	i = 0;
-	sizetotal = ft_strlen(s1) + ft_strlen(s2);
+	sizetotal = ft_strlen_gnl(s1) + ft_strlen_gnl(s2);
 	content = malloc(sizeof(char) * (sizetotal + 1));
 	if (!content || !s1 || !s2)
 		return (NULL);
@@ -66,7 +66,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	return (content);
 }
 
-size_t	ft_strlen(const char *string)
+size_t	ft_strlen_gnl(const char *string)
 {
 	int	i;
 
@@ -76,7 +76,7 @@ size_t	ft_strlen(const char *string)
 	return (i);
 }
 
-char	*ft_strchr(const char *string, int c)
+char	*ft_strchr_gnl(const char *string, int c)
 {
 	char	*str;
 

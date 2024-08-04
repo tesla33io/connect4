@@ -32,6 +32,8 @@ SRC_FILES		+= algo/algo.c
 SRC_FILES		+= algo/tree.c
 SRC_FILES		+= algo/utils.c
 SRC_FILES		+= algo/winner_state.c
+SRC_FILES		+= gnl/get_next_line.c
+SRC_FILES		+= gnl/get_next_line_utils.c
 
 # bonus related files
 SRC_FILES		+= bonus/run_game_visual.c
