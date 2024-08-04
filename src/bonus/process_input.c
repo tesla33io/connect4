@@ -25,7 +25,7 @@ void processInput(t_gameVisual *gameVis, t_game *game)
             {
                 int x, y;
                 SDL_GetMouseState(&x, &y);
-                if (executeUserTurnVisual(game, x, y) != 0)
+                if (executeUserTurnVisual(game, gameVis, x, y) != 0)
                     return;
             }
         }

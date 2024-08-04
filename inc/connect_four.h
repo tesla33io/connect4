@@ -12,6 +12,7 @@
 # define MAX_SIZE 60
 # define MIN_ROWS 6
 # define MIN_COLS 7
+# define MAX_COLS_TERMINAL 27
 # define TRUE 1
 # define FALSE 0
 
@@ -32,13 +33,13 @@ enum e_turn
 
 typedef struct s_game
 {
-    int visual;
-    int rows;
-    int cols;
-    int turn;
-    int winner;
-    int scale;
-    int steps[MAX_SIZE * MAX_SIZE];
+    int     visual;
+    int     rows;
+    int     cols;
+    int     turn;
+    int     winner;
+    int     tile_size;
+    int     steps[MAX_SIZE * MAX_SIZE];
     uint64_t bp1[MAX_SIZE];
     uint64_t bp2[MAX_SIZE];
     uint64_t bmask[MAX_SIZE];
@@ -52,7 +53,8 @@ int    launchGame(t_game *game);
 int    usersTurn(t_game *game);
 void    botTurn(t_game *game);
 int isWinner(uint64_t board[MAX_SIZE], int rowMax, int colMax);
-
+void    userWinner();
+void    botWinner();
 /**
  * @brief display the current board
  */

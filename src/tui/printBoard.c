@@ -5,15 +5,16 @@ static void    displayeTitle();
 
 void    printBoard(t_game *game)
 {
-    char *spaces = "          ";
-    char *topBorder = "  |¯¯¯¯¯¯|";
-    char *emptyBorder = "  |      |";
+    if (game->cols > MAX_COLS_TERMINAL)
+        return (printBitBoard(game->bmask, game->bp1, game->rows, game->cols));
+    char *topBorder = "|¯¯¯¯¯¯|";
+    char *emptyBorder = "|      |";
     char *circleTop = "/¯¯\\";
     char *circleBottom = "\\__/";
     // char *circleTopWin = "/¯/\\";
     // char *circleBtmWin = "\\/_/";
-    char *bottomBorder = "  |______|";
-    char *leftBorder = "  | ";
+    char *bottomBorder = "|______|";
+    char *leftBorder = "| ";
     char *rightBorder = " |";
 
     displayeTitle();
@@ -22,8 +23,6 @@ void    printBoard(t_game *game)
     for (int i = game->rows - 1; i >= 0; i--)
     {
         write(STDOUT_FILENO, COLOR_GRAY, ft_strlen(COLOR_GRAY));
-        for (int k = 0; k < game->cols; k++)
-            write(STDOUT_FILENO, spaces, ft_strlen(spaces));
         write(STDOUT_FILENO, "\n", 1);
         for (int k = 0; k < game->cols; k++)
             write(STDOUT_FILENO, topBorder, ft_strlen(topBorder));
@@ -64,15 +63,15 @@ void    printBoard(t_game *game)
         write(STDOUT_FILENO, "\n", 1);
         for (int k = 0; k < game->cols; k++)
             write(STDOUT_FILENO, bottomBorder, ft_strlen(bottomBorder));
-        write(STDOUT_FILENO, "\n", 1);
+        // write(STDOUT_FILENO, "\n", 1);
         write(STDOUT_FILENO, COLOR_RESET, ft_strlen(COLOR_RESET));
     }
     write(STDOUT_FILENO, "\n", 1);
-    // printTurn_n_pos(game);
 }
 
 void    printBitBoard(uint64_t bmask[MAX_SIZE], uint64_t bp[MAX_SIZE], int rowMax, int colMax)
 {
+    ft_putstr_fd("\n", 1);
     for (int r = rowMax - 1; r >= 0; r--)
     {
         for (int c = 0; c < colMax; c++)
@@ -91,7 +90,7 @@ void    printBitBoard(uint64_t bmask[MAX_SIZE], uint64_t bp[MAX_SIZE], int rowMa
 static void    displayeTitle()
 {
     const char *title = 
-        "\n"
+        "\n\n"
         "   ██████╗ ██████╗ ███╗   ██╗███╗   ██╗███████╗ ██████╗████████╗   ██╗  ██╗\n"
         "  ██╔════╝██╔═══██╗████╗  ██║████╗  ██║██╔════╝██╔════╝╚══██╔══╝   ██║  ██║\n"
         "  ██║     ██║   ██║██╔██╗ ██║██╔██╗ ██║█████╗  ██║        ██║      ███████║\n"

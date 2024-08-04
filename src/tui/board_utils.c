@@ -16,9 +16,6 @@ int getOpenedRowFromCol(uint64_t board[MAX_SIZE], int col, int maxCol, int maxRo
     {
         if (!(board[row] & (1UL << col)))
         {
-            write(2, "getOpenedRowFromCol: ", 22);
-            ft_putnbr_lft_fd(row, 2);
-            write(2, "\n", 1);
             return (row);
         }
     }
@@ -29,9 +26,6 @@ void    setChecker(uint64_t board[MAX_SIZE], int rowMax, int row, int col)
 {
     if (row >= rowMax)
         return;
-    write(2, "setChecker: ", 13);
-        ft_putnbr_lft_fd(row, 2);
-        write(2, "\n", 1);
     board[row] |= (1ULL << col);
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   algo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: astavrop <astavrop@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: ohladkov <ohladkov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 19:13:11 by astavrop          #+#    #+#             */
-/*   Updated: 2024/08/03 00:16:08 by astavrop         ###   ########.fr       */
+/*   Updated: 2024/08/04 13:05:27 by ohladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include <stdint.h>
 #include <stdio.h>
 
-int	main(int ac, char *av[])
+/* int	main(int ac, char *av[])
 {
 	(void)ac;
 	(void)av;
@@ -25,7 +25,7 @@ int	main(int ac, char *av[])
 	node->bp1[0] = 15;
 	printf("Win: %d\n", check_terminal_state(node));
 	return (0);
-}
+} */
 
 int	sim_rand_game(t_TreeNode *parent)
 {

@@ -6,15 +6,12 @@ int main(int ac, char **av)
 {
     t_game  game;
 
-    if (ac == 1)
-        return (ft_putendl_fd("Usage:\t./connect4 <rows (min 6)> <columns (min 7)>", STDOUT_FILENO), 0);
+    initGame(&game);
     if (validateInput(ac, av, &game) != 0)
         return (-1);
     srand(time(NULL));
-    game.turn = rand() % 2;
-    if (game.visual == 1)
+    if (game.visual == TRUE)
         return (runGameVisual(&game));
-    initGame(&game);
     if (launchGame(&game) == -1)
         return (-1);
     return (0);
@@ -24,26 +21,19 @@ int    launchGame(t_game *game)
 {
     while (1)
     {
-        if (game->cols < 15)
-            printBoard(game);
-        else
-            printBitBoard(game->bmask, game->bp1, game->rows, game->cols);
+        printBoard(game);
         if (game->turn % 2 == 0)
         {
             if (usersTurn(game) == -1)
                 return (-1);
             if (isWinner(game->bp1, game->rows, game->cols))
-            {
-                return (printBoard(game), ft_putendl_fd("\tUSER THE WINNER!", 1), 1);
-            }
+                return (ft_putendl_fd("\tYOU ARE THE WINNER!", 1), printBoard(game), userWinner(), 1);
         }
         else
         {
             botTurn(game);
             if (isWinner(game->bp2, game->rows, game->cols))
-            {
-                return (printBoard(game), ft_putendl_fd("\tBOT THE WINNER!", 1), 1);
-            }
+                return (ft_putendl_fd("\tBOT THE WINNER!", 1), printBoard(game), botWinner(), 1);
         }
         if (game->turn >= (game->cols * game->rows))
             return (printBoard(game), drawGame(), 1);
@@ -57,7 +47,7 @@ int    usersTurn(t_game *game)
     int col;
     while (1)
     {
-        write(STDOUT_FILENO, "* Press 'q' to quit the game\n\n", 30);
+        write(STDOUT_FILENO, "\n* Press 'q' to quit the game\n\n", 30);
         displayUserMsg();
         str = get_next_line(STDIN_FILENO);
         if (!str)
