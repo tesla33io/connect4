@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: astavrop <astavrop@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: ohladkov <ohladkov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/13 12:29:54 by astavrop          #+#    #+#             */
-/*   Updated: 2024/08/01 22:54:14 by astavrop         ###   ########.fr       */
+/*   Updated: 2024/08/04 17:21:23 by ohladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,17 @@
 # define LIBFT_H
 
 # include <string.h>
+
+# include <stddef.h>
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 1
+# endif // !BUFFER_SIZE
+
+char		*get_next_line(int fd);
+void		*ft_calloc_gnl(size_t nmem, size_t size);
+char		*ft_strjoin_gnl(char const *s1, char const *s2);
+size_t		ft_strlen_gnl(const char *string);
+char		*ft_strchr_gnl(const char *string, int c);
 
 typedef struct s_list
 {

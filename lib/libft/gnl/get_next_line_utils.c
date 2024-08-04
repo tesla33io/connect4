@@ -6,11 +6,12 @@
 /*   By: ohladkov <ohladkov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/16 19:00:38 by astavrop          #+#    #+#             */
-/*   Updated: 2024/08/04 13:00:58 by ohladkov         ###   ########.fr       */
+/*   Updated: 2024/08/04 17:18:13 by ohladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "../libft.h"
+
 #include <stdlib.h>
 
 void	ft_bzero_gnl(void *s, size_t n)

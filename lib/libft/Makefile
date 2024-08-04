@@ -85,6 +85,9 @@ SRC_FILES		+= deque/deque_swap.c			# Deque
 SRC_FILES		+= hash_table/hashtable.c		### Hash Table ###
 SRC_FILES		+= hash_table/ht_utils.c		# Hash Table
 
+SRC_FILES		+= gnl/get_next_line.c			### GNL ###
+SRC_FILES		+= gnl/get_next_line_utils.c	# GNL
+
 # Object files directory
 OBJ_DIR			:= obj/
 

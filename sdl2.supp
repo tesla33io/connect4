@@ -1,0 +1,120 @@
+{
+   leak SDL2_Leak
+   Memcheck:Leak
+   ...
+   fun:SDL_Init
+}
+{
+   leak SDL2_Leak
+   Memcheck:Leak
+   ...
+   fun:SDL_Init
+}
+{
+   leak call_init
+   Memcheck:Leak
+   ...
+   fun:call_init
+}
+{
+   leak _dl_open
+   Memcheck:Leak
+   ...
+   fun:_dl_open
+}
+{
+   leak XGetDefault
+   Memcheck:Leak
+   ...
+   fun:XGetDefault
+}
+{
+   leak XrmInitialize
+   Memcheck:Leak
+   ...
+   fun:XrmInitialize
+}
+{
+   leak __cxa_finalize
+   Memcheck:Leak
+   ...
+   fun:__cxa_finalize
+}
+{
+   leak XSetLocaleModifiers
+   Memcheck:Leak
+   ...
+   fun:XSetLocaleModifiers
+}
+{
+   leak pa_flist_new_with_name
+   Memcheck:Leak
+   ...
+   fun:pa_flist_new_with_name
+}
+{
+   leak pa_memimport_get
+   Memcheck:Leak
+   ...
+   fun:pa_memimport_get
+}
+{
+   leak pa_pdispatch_run
+   Memcheck:Leak
+   ...
+   fun:pa_pdispatch_run
+}
+{
+   leak pa_hashmap_put
+   Memcheck:Leak
+   ...
+   fun:pa_hashmap_put
+}
+{
+   leak pa_mainloop_iterate
+   Memcheck:Leak
+   ...
+   fun:pa_mainloop_iterate
+}
+{
+   leak _XrmInitParseInfo
+   Memcheck:Leak
+   ...
+   fun:_XrmInitParseInfo
+}
+{
+   leak _dbus_message_loader_queue_messages
+   Memcheck:Leak
+   ...
+   fun:_dbus_message_loader_queue_messages
+}
+{
+   leak dbus_threads_init
+   Memcheck:Leak
+   ...
+   fun:dbus_threads_init
+}
+{
+   leak dbus_message_new_method_call
+   Memcheck:Leak
+   ...
+   fun:dbus_message_new_method_call
+}
+{
+   leak dbus_connection_send_with_reply_and_block
+   Memcheck:Leak
+   ...
+   fun:dbus_connection_send_with_reply_and_block
+}
+{
+   leak dbus_bus_register
+   Memcheck:Leak
+   ...
+   fun:dbus_bus_register
+}
+{
+   leak pa_xmalloc
+   Memcheck:Leak
+   ...
+   fun:pa_xmalloc
+}

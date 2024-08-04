@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_malloc.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: astavrop <astavrop@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: ohladkov <ohladkov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 15:29:20 by astavrop          #+#    #+#             */
-/*   Updated: 2024/08/01 22:54:14 by astavrop         ###   ########.fr       */
+/*   Updated: 2024/08/04 17:28:47 by ohladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,6 +109,7 @@ void gc_free_ptr(void **ptr)
 void	gc_free_gc(int flag)
 {
 	t_list		*node;
+	t_list		*tmp;
 	t_list		**gc;
 
 	gc = gc_get_storage(flag);
@@ -119,9 +120,10 @@ void	gc_free_gc(int flag)
 	{
 		if (node->content)
 			gc_free_ptr((void **) &node->content);
+		tmp = node;
 		node = node->next;
+		gc_free_ptr((void **) &tmp);
 	}
 	gc_free_ptr((void **) &node->content);
 	gc_free_ptr((void **) &node);
-	*gc = NULL;
 }

@@ -6,7 +6,7 @@ int calcTileSize(int rows, int cols);
 
 int runGameVisual(t_game *game)
 {
-    t_gameVisual *gameVis = gc_malloc(sizeof(t_gameVisual*));
+    t_gameVisual *gameVis = (t_gameVisual *)ft_calloc(1, sizeof(t_gameVisual));
     game->tile_size = calcTileSize(game->rows, game->cols);
     if (game->tile_size == -1)
         return (ft_putstr_fd("Size of the board too big", STDOUT_FILENO), -1);
@@ -18,7 +18,7 @@ int runGameVisual(t_game *game)
         if (game->turn % 2 != 0 && game->winner == FALSE)
             executeBotTurnVisual(game, gameVis);
     }
-    destroyWindow(gameVis); //gc_malloc how to free
+    destroyWindow(gameVis);
     return 0;
 }
 
@@ -35,11 +35,12 @@ int initializeWindow(t_gameVisual *game, int rows, int cols, int tile_size)
         SDL_WINDOWPOS_CENTERED,
         cols * tile_size,
         rows * tile_size,
-        SDL_WINDOW_SHOWN
+        SDL_WINDOW_BORDERLESS
     ); // SDL_WINDOW_BORDERLESS //SDL_WINDOW_SHOWN
     if (!game->win)
     {
         ft_putstr_fd("Error creating SDL window.\n", STDERR_FILENO);
+        SDL_Quit();
         return FALSE;
     }
     game->ren = SDL_CreateRenderer(game->win, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC); //0
@@ -47,6 +48,7 @@ int initializeWindow(t_gameVisual *game, int rows, int cols, int tile_size)
     {
         SDL_DestroyWindow(game->win);
         ft_putstr_fd("SDL_CreateRenderer Error\n", STDERR_FILENO);
+        SDL_Quit();
         return FALSE;
     }
     SDL_SetRenderDrawColor(game->ren, 255, 255, 255, 100);
@@ -60,6 +62,7 @@ void destroyWindow(t_gameVisual *game)
     SDL_DestroyRenderer(game->ren);
     SDL_DestroyWindow(game->win);
     SDL_Quit();
+    free(game);
 }
 
 int calcTileSize(int rows, int cols)

@@ -1,6 +1,6 @@
 #include "../inc/connect_four.h"
 #include "../inc/bonus_sdl2.h"
-#include "../inc/get_next_line.h"
+#include <fcntl.h>
 
 int main(int ac, char **av)
 {
@@ -10,7 +10,7 @@ int main(int ac, char **av)
     if (validateInput(ac, av, &game) != 0)
         return (-1);
     srand(time(NULL));
-    if (game.visual == TRUE)
+    if (game.visual == TRUE && game.rows < 30)
         return (runGameVisual(&game));
     if (launchGame(&game) == -1)
         return (-1);
@@ -27,13 +27,13 @@ int    launchGame(t_game *game)
             if (usersTurn(game) == -1)
                 return (-1);
             if (isWinner(game->bp1, game->rows, game->cols))
-                return (ft_putendl_fd("\tYOU ARE THE WINNER!", 1), printBoard(game), userWinner(), 1);
+                return (ft_putendl_fd("/n\tYOU ARE THE WINNER!", 1), printBoard(game), userWinner(), 1);
         }
         else
         {
             botTurn(game);
             if (isWinner(game->bp2, game->rows, game->cols))
-                return (ft_putendl_fd("\tBOT THE WINNER!", 1), printBoard(game), botWinner(), 1);
+                return (ft_putendl_fd("/n\tBOT THE WINNER!", 1), printBoard(game), botWinner(), 1);
         }
         if (game->turn >= (game->cols * game->rows))
             return (printBoard(game), drawGame(), 1);
