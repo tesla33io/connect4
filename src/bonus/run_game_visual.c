@@ -16,8 +16,6 @@ int runGameVisual(t_game *game)
         if (game->turn % 2 != 0 && game->winner == FALSE)
             executeBotTurnVisual(game);
         render(gameVis, game);
-        
-        // renderGameBoard(gameVis, game);
     }
     destroyWindow(gameVis); //gc_malloc how to free
     return 0;

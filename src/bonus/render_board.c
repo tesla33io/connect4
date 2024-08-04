@@ -39,17 +39,8 @@ void drawGrid(t_game *game, SDL_Renderer* renderer, int rowsMax, int colsMax, in
 
 void drawChecker(uint64_t bp[MAX_SIZE], uint64_t bmask[MAX_SIZE], SDL_Renderer* renderer, int row, int col, int rowsMax, int scale)
 {
-    (void)scale;
-    (void)bp;
-    (void)bmask;
     t_rgba  rgba;
 
-    // SDL_Rect rect = { 
-    //     col * TILE_SIZE(scale) + (TILE_SIZE(scale) / 4), 
-    //     (rowsMax - 1 - row ) * TILE_SIZE(scale) + (TILE_SIZE(scale) / 4), 
-    //     TILE_SIZE(scale) / 2, 
-    //     TILE_SIZE(scale) / 2
-    // };
     if (bp[row] & (1UL << col))
     {
         rgba.r = 120;
@@ -71,14 +62,11 @@ void drawChecker(uint64_t bp[MAX_SIZE], uint64_t bmask[MAX_SIZE], SDL_Renderer* 
         rgba.b = 220;
         rgba.a = 255;
     }
-        // SDL_SetRenderDrawColor(renderer, 120, 187, 88, 255);
-        // SDL_SetRenderDrawColor(renderer, 255, 29, 18, 255);
-        // SDL_SetRenderDrawColor(renderer, 255, 248, 220, 255);
-    // SDL_RenderFillRect(renderer, &rect);
-
-    DrawShadedCircle(renderer, (col * TILE_SIZE(scale) + (TILE_SIZE(scale) / 4)), ((rowsMax - 1 - row ) * TILE_SIZE(scale) + (TILE_SIZE(scale) / 4)), TILE_SIZE(scale) / 4, rgba);
+    int centreX = col * TILE_SIZE(scale) + (TILE_SIZE(scale) / 2);
+    int centreY =(rowsMax - 1 - row ) * TILE_SIZE(scale) + (TILE_SIZE(scale) / 2);
+    DrawShadedCircle(renderer, centreX, centreY, TILE_SIZE(scale) / 4, rgba);
     for (int i = 0; i < 5; i++)
-        DrawShadedCircleBorder(renderer, (col * TILE_SIZE(scale) + (TILE_SIZE(scale) / 4)) - 1 + i, ((rowsMax - 1 - row ) * TILE_SIZE(scale) + (TILE_SIZE(scale) / 4)) - 1 + i, TILE_SIZE(scale) / 4);
+        DrawShadedCircleBorder(renderer, centreX - 1 + i, centreY - 1 + i, TILE_SIZE(scale) / 4);
 }
 
 void Draw3DRectangle(SDL_Renderer* renderer, int32_t x, int32_t y, int32_t width, int32_t height)

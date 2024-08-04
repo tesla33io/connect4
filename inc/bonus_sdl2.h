@@ -2,14 +2,13 @@
 # define BONUS_SDL2_H
 
 # include <stdio.h>
-#include </opt/homebrew/include/SDL2/SDL.h>
-#include </opt/homebrew/include/SDL2/SDL_timer.h>
-#include </opt/homebrew/include/SDL2/SDL_render.h>
+// #include </opt/homebrew/include/SDL2/SDL.h>
+// #include </opt/homebrew/include/SDL2/SDL_timer.h>
+// #include </opt/homebrew/include/SDL2/SDL_render.h>
 
-// # include <SDL2/SDL.h>
-// # include <SDL2/SDL_timer.h>
-// #include <SDL_ttf.h>
-// #include <SDL2/SDL_ttf.h> 
+# include <SDL2/SDL.h>
+# include <SDL2/SDL_timer.h>
+# include <SDL2/SDL_render.h>
 #include "connect_four.h"
 
 # define TILE_SIZE(n) (100 * n)
