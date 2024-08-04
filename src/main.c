@@ -1,5 +1,6 @@
 #include "../inc/connect_four.h"
 #include "../inc/bonus_sdl2.h"
+#include "../inc/get_next_line.h"
 
 int main(int ac, char **av)
 {
