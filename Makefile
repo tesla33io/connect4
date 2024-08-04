@@ -9,9 +9,9 @@ CC				:= cc
 CFLAGS			:= -Wall -Werror -Wextra -O3 -g
 
 # Libraries to be linked (if any)
-#LIBS			= -L $(LFT_PATH) -lft -I/usr/local/include/SDL2 -D_THREAD_SAFE -L/usr/local/lib -lSDL2 
+LIBS			= -L $(LFT_PATH) -lft -I/usr/local/include/SDL2 -D_THREAD_SAFE -L/usr/local/lib -lSDL2 -lm
 #L/opt/homebrew/bin/sdl2-config
-LIBS			= -L $(LFT_PATH) -lft -I/opt/homebrew/include/SDL2 -D_THREAD_SAFE -L/opt/homebrew/lib -lSDL2 
+# LIBS			= -L $(LFT_PATH) -lft -I/opt/homebrew/include/SDL2 -D_THREAD_SAFE -L/opt/homebrew/lib -lSDL2 
 #L/opt/homebrew/bin/sdl2-config
 # Include directories
 INCLUDES		:= -Iinc/
