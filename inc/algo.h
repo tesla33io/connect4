@@ -6,7 +6,7 @@
 /*   By: astavrop <astavrop@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 19:26:40 by astavrop          #+#    #+#             */
-/*   Updated: 2024/08/04 19:10:34 by astavrop         ###   ########.fr       */
+/*   Updated: 2024/08/04 20:07:09 by astavrop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,12 +51,15 @@ typedef struct	s_AlgoSettings {
 
 /* Algo (alog.c) */
 
+int				calc_ai_turn(uint64_t *bp1, uint64_t *bp2, uint8_t player,
+	t_game *g);
+
 int				build_tree(t_TreeNode *root, t_Settings *as);
 int				simulate(t_TreeNode *parent, t_Settings *as);
 void			backpropagate(t_TreeNode *parent, t_Settings *as);
 void			apply_move(t_TreeNode *node, int col, int player);
-int				check_winner(uint64_t bp[MAX_SIZE], int player);
-int				check_terminal_state(t_TreeNode *node);
+int				check_winner(uint64_t *bp, int player, int rmax, int cmax);
+int				check_terminal_state(t_TreeNode *node, t_Settings *as);
 
 /* Tree (tree.c) */
 

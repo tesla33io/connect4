@@ -23,11 +23,11 @@ TARGET			:= connect4
 SRC_DIR			:= src/
 
 # Source files
-#SRC_FILES		+= main.c  
-#SRC_FILES		+= tui/board_utils.c  
-#SRC_FILES		+= tui/game_utils.c  
+SRC_FILES		+= main.c  
+SRC_FILES		+= tui/board_utils.c  
+SRC_FILES		+= tui/game_utils.c  
 SRC_FILES		+= tui/printBoard.c  
-#SRC_FILES		+= tui/gameState.c  
+SRC_FILES		+= tui/gameState.c  
 SRC_FILES		+= algo/algo.c
 SRC_FILES		+= algo/tree.c
 SRC_FILES		+= algo/utils.c

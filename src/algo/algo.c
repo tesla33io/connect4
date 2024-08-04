@@ -6,12 +6,13 @@
 /*   By: astavrop <astavrop@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 19:13:11 by astavrop          #+#    #+#             */
-/*   Updated: 2024/08/04 19:23:36 by astavrop         ###   ########.fr       */
+/*   Updated: 2024/08/04 20:36:40 by astavrop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../lib/libft/libft.h"
 #include "../../inc/algo.h"
+#include "../../inc/connect_four.h"
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -40,6 +41,21 @@
 	return (0);
 }
 */
+
+int	calc_ai_turn(uint64_t *bp1, uint64_t *bp2, uint8_t player, t_game *g)
+{
+	t_Settings	as;
+	as.wi = g->cols;
+	as.he = g->rows;
+	as.dificulty = 5;
+	as.depth = 3;
+	// clear_board(bp1, MAX_SIZE);
+	// clear_board(bp2, MAX_SIZE);
+	t_TreeNode	*node = tree_new(bp1, bp2, player, as.dificulty);
+	int	sug = build_tree(node, &as);
+	gc_free_gc(0);
+	return (sug);
+}
 
 int	build_tree(t_TreeNode *root, t_Settings *as)
 {
@@ -111,6 +127,8 @@ int	build_tree(t_TreeNode *root, t_Settings *as)
 		uint8_t		played_moves[as->dificulty];
 		uint8_t		n_played_moves = 0;
 		t_deque_node	*to_explore = deque_pop_front(priority);
+		if (!to_explore)
+			break ;
 		t_TreeNode		*cur = (t_TreeNode *) to_explore->data;
 		gc_free_ptr((void **) &to_explore);
 
@@ -201,11 +219,15 @@ int	simulate(t_TreeNode *parent, t_Settings *as)
 		return (on_crash_code(INVALID_FUNC_ARGS, -1, __FILE_NAME__, __LINE__));
 	t_TreeNode	sim_node = *parent;
 
-	int	result = 0;
+	int	result1 = 0;
+	int	result2 = 0;
+	int	i = 0;
 	// Play random game
-	while (1)
+	while (i + 1)
 	{
-		if ((result = check_terminal_state(&sim_node)) != 0)
+		printf("%d\n", i);
+		if ((result1 = isWinner(sim_node.bp1, as->he, as->wi)) == 1
+			|| (result2 = isWinner(sim_node.bp2, as->he, as->wi) == 1))//check_terminal_state(&sim_node, as)) != 0)
 			break ;
 		// Find valid moves
 		uint8_t	valid_moves[as->dificulty];
@@ -221,8 +243,10 @@ int	simulate(t_TreeNode *parent, t_Settings *as)
 			apply_move(&sim_node, move, sim_node.player_to_move);
 			sim_node.player_to_move = 3 - sim_node.player_to_move;
 		}
+		else
+			break ;
 	}
-	return (result);
+	return (result1 == 1 ? 1 : 2);
 }
 
 void	apply_move(t_TreeNode *node, int col, int player)
@@ -241,11 +265,11 @@ void	apply_move(t_TreeNode *node, int col, int player)
 	}
 }
 
-int	check_winner(uint64_t bp[MAX_SIZE], int player)
+int	check_winner(uint64_t *bp, int player, int rmax, int cmax)
 {
 	// Horizontal check
-	for (int row = 0; row < MAX_SIZE; row++) {
-		for (int col = 0; col < MAX_SIZE - 3; col++) {
+	for (int row = 0; row < rmax; row++) {
+		for (int col = 0; col < cmax - 3; col++) {
 			if ((bp[row] & (1ULL << col)) &&
 				(bp[row] & (1ULL << (col + 1))) &&
 				(bp[row] & (1ULL << (col + 2))) &&
@@ -255,8 +279,8 @@ int	check_winner(uint64_t bp[MAX_SIZE], int player)
 		}
 	}
 	// Vertical check
-	for (int col = 0; col < MAX_SIZE; col++) {
-		for (int row = 0; row < MAX_SIZE - 3; row++) {
+	for (int col = 0; col < cmax; col++) {
+		for (int row = 0; row < rmax - 3; row++) {
 			if ((bp[row] & (1ULL << col)) &&
 				(bp[row + 1] & (1ULL << col)) &&
 				(bp[row + 2] & (1ULL << col)) &&
@@ -266,8 +290,8 @@ int	check_winner(uint64_t bp[MAX_SIZE], int player)
 		}
 	}
 	// Diagonal (positive slope) check
-	for (int row = 0; row < MAX_SIZE - 3; row++) {
-		for (int col = 0; col < MAX_SIZE - 3; col++) {
+	for (int row = 0; row < rmax - 3; row++) {
+		for (int col = 0; col < cmax - 3; col++) {
 			if ((bp[row] & (1ULL << col)) &&
 				(bp[row + 1] & (1ULL << (col + 1))) &&
 				(bp[row + 2] & (1ULL << (col + 2))) &&
@@ -277,8 +301,8 @@ int	check_winner(uint64_t bp[MAX_SIZE], int player)
 		}
 	}
 	// Diagonal (negative slope) check
-	for (int row = 3; row < MAX_SIZE; row++) {
-		for (int col = 0; col < MAX_SIZE - 3; col++) {
+	for (int row = 3; row < rmax; row++) {
+		for (int col = 0; col < cmax - 3; col++) {
 			if ((bp[row] & (1ULL << col)) &&
 				(bp[row - 1] & (1ULL << (col + 1))) &&
 				(bp[row - 2] & (1ULL << (col + 2))) &&
@@ -290,12 +314,12 @@ int	check_winner(uint64_t bp[MAX_SIZE], int player)
 	return (0);
 }
 
-int	check_terminal_state(t_TreeNode *node)
+int	check_terminal_state(t_TreeNode *node, t_Settings *as)
 {
-	int winner = check_winner(node->bp1, 1);
+	int winner = check_winner(node->bp1, 1, as->he, as->wi);
 	if (winner)
 		return (winner);
-	winner = check_winner(node->bp2, 2);
+	winner = check_winner(node->bp2, 2, as->he, as->wi);
 	if (winner)
 		return (winner);
 	// Check for draw (if the top row is full)

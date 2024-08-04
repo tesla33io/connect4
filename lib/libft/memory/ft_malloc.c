@@ -6,7 +6,7 @@
 /*   By: ohladkov <ohladkov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 15:29:20 by astavrop          #+#    #+#             */
-/*   Updated: 2024/08/04 17:28:47 by ohladkov         ###   ########.fr       */
+/*   Updated: 2024/08/04 19:50:49 by astavrop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ t_list	**gc_get_storage(int i)
 		i = gc_set_storage('g');
 	if (!gc[i])
 	{
-		gc[i] = ft_calloc(1, sizeof(*gc[i]));
+		gc[i] = malloc(sizeof(t_list *));
 		gc[i]->content = NULL;
 		gc[i]->next = NULL;
 	}
@@ -73,7 +73,7 @@ void	*gc_malloc(size_t size)
 	ret = ft_calloc(1, size);
 	if (!ret)
 		ft_putstr_fd("Error (gc_malloc): memory allocation failed.\n", 2);
-	gc = gc_get_storage(-1);
+	gc = gc_get_storage(0);
 	if (!gc || !*gc)
 		return ((void *)42);
 	new_node = ft_lstnew(ret);
@@ -126,4 +126,5 @@ void	gc_free_gc(int flag)
 	}
 	gc_free_ptr((void **) &node->content);
 	gc_free_ptr((void **) &node);
+	*gc = NULL;
 }
