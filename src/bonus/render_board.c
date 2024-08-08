@@ -65,7 +65,7 @@ void drawGrid(t_game *game, SDL_Renderer* renderer)
         for (int c = 0; c < colsMax; c++)
         {
             Draw3DRectangle(renderer, c * tile_size, (rowsMax - 1 - r) * tile_size, 
-            tile_size - MARGINE, tile_size - MARGINE);
+            tile_size, tile_size);
             drawChecker(game->bp1, game->bmask, renderer, r, c, rowsMax, tile_size);
         }
     }
@@ -92,8 +92,8 @@ void drawChecker(uint64_t bp[MAX_SIZE], uint64_t bmask[MAX_SIZE], SDL_Renderer* 
     else
     {
         rgba.r = 255;
-        rgba.g = 248;
-        rgba.b = 220;
+        rgba.g = 255;
+        rgba.b = 255;
         rgba.a = 1;
     }
     int centreX = col * tile_size + (tile_size / 2);

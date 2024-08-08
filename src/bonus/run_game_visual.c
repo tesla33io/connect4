@@ -35,7 +35,7 @@ int initializeWindow(t_gameVisual *game, int rows, int cols, int tile_size)
         SDL_WINDOWPOS_CENTERED,
         cols * tile_size,
         rows * tile_size,
-        SDL_WINDOW_BORDERLESS
+        SDL_WINDOW_SHOWN
     ); // SDL_WINDOW_BORDERLESS //SDL_WINDOW_SHOWN
     if (!game->win)
     {
