@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   algo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: astavrop <astavrop@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: ohladkov <ohladkov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 19:13:11 by astavrop          #+#    #+#             */
-/*   Updated: 2024/08/04 20:36:40 by astavrop         ###   ########.fr       */
+/*   Updated: 2024/08/31 16:29:52 by ohladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -225,7 +225,7 @@ int	simulate(t_TreeNode *parent, t_Settings *as)
 	// Play random game
 	while (i + 1)
 	{
-		printf("%d\n", i);
+		// printf("%d\n", i);
 		if ((result1 = isWinner(sim_node.bp1, as->he, as->wi)) == 1
 			|| (result2 = isWinner(sim_node.bp2, as->he, as->wi) == 1))//check_terminal_state(&sim_node, as)) != 0)
 			break ;
