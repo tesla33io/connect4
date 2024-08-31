@@ -7,27 +7,23 @@ void    printBoard(t_game *game)
 {
     if (game->cols > MAX_COLS_TERMINAL)
         return (printBitBoard(game->bmask, game->bp1, game->rows, game->cols));
-    char *topBorder = "|¯¯¯¯¯¯|";
     char *emptyBorder = "|      |";
     char *circleTop = "/¯¯\\";
     char *circleBottom = "\\__/";
-    // char *circleTopWin = "/¯/\\";
-    // char *circleBtmWin = "\\/_/";
-    char *bottomBorder = "|______|";
     char *leftBorder = "| ";
     char *rightBorder = " |";
+    int colMax = game->cols;
 
     displayeTitle();
 
-    // display board
     for (int i = game->rows - 1; i >= 0; i--)
     {
         write(STDOUT_FILENO, COLOR_GRAY, ft_strlen(COLOR_GRAY));
         write(STDOUT_FILENO, "\n", 1);
-        for (int k = 0; k < game->cols; k++)
-            write(STDOUT_FILENO, topBorder, ft_strlen(topBorder));
+        for (int k = 0; k < colMax; k++)
+            write(STDOUT_FILENO, emptyBorder, ft_strlen(emptyBorder));
         write(STDOUT_FILENO, "\n", 1);
-        for (int k = 0; k < game->cols; k++)
+        for (int k = 0; k < colMax; k++)
         {
             if (!(game->bp1[i] & (1UL << k)) && !(game->bmask[i] & (1UL << k)))
                 write(STDOUT_FILENO, emptyBorder, ft_strlen(emptyBorder));
@@ -44,7 +40,7 @@ void    printBoard(t_game *game)
             }
         }
         write(STDOUT_FILENO, "\n", 1);
-        for (int k = 0; k < game->cols; k++)
+        for (int k = 0; k < colMax; k++)
         {
             if (!(game->bp1[i] & (1UL << k)) && !(game->bmask[i] & (1UL << k)))
                 write(STDOUT_FILENO, emptyBorder, ft_strlen(emptyBorder));
@@ -60,31 +56,46 @@ void    printBoard(t_game *game)
                 write(STDOUT_FILENO, rightBorder, ft_strlen(rightBorder));
             }
         }
-        write(STDOUT_FILENO, "\n", 1);
-        for (int k = 0; k < game->cols; k++)
-            write(STDOUT_FILENO, bottomBorder, ft_strlen(bottomBorder));
-        // write(STDOUT_FILENO, "\n", 1);
         write(STDOUT_FILENO, COLOR_RESET, ft_strlen(COLOR_RESET));
     }
+    write(STDOUT_FILENO, "\n\n", 2);
+    write(STDOUT_FILENO, COLOR_GRAY, ft_strlen(COLOR_GRAY));
+    for (int i = 0; i < colMax; i++)
+    {
+        ft_putstr_fd("    ", STDOUT_FILENO);
+        ft_putnbr_lft_fd(i + 1, STDOUT_FILENO);
+        ft_putstr_fd("   ", STDOUT_FILENO);
+    }
     write(STDOUT_FILENO, "\n", 1);
+    write(STDOUT_FILENO, COLOR_RESET, ft_strlen(COLOR_RESET));
 }
 
 void    printBitBoard(uint64_t bmask[MAX_SIZE], uint64_t bp[MAX_SIZE], int rowMax, int colMax)
 {
-    ft_putstr_fd("\n", 1);
+    write(STDOUT_FILENO, "\n", 1);
     for (int r = rowMax - 1; r >= 0; r--)
     {
         for (int c = 0; c < colMax; c++)
         {
             if (bp[r] & (1UL << c))
-                ft_putstr_fd("X ", 1);
+                ft_putstr_fd("X ", STDOUT_FILENO);
             else if ((bmask[r] & (1UL << c)) && !(bp[r] & (1UL << c)))
-                ft_putstr_fd("O ", 1);
+                ft_putstr_fd("O ", STDOUT_FILENO);
             else
-                ft_putstr_fd(". ", 1);
+                ft_putstr_fd(". ", STDOUT_FILENO);
         }
-        ft_putstr_fd("\n", 1);
+        ft_putstr_fd("\n", STDOUT_FILENO);
     }
+    write(STDOUT_FILENO, COLOR_GRAY, ft_strlen(COLOR_GRAY));
+    for (int i = 0; i < colMax; i++)
+    {
+        ft_putnbr_lft_fd(i + 1, STDOUT_FILENO);
+        if (i < 9)
+            ft_putstr_fd(" ", STDOUT_FILENO);
+    }
+    ft_putstr_fd("\n", STDOUT_FILENO);
+    write(STDOUT_FILENO, COLOR_RESET, ft_strlen(COLOR_RESET));
+
 }
 
 static void    displayeTitle()
@@ -99,7 +110,6 @@ static void    displayeTitle()
         "   ╚═════╝ ╚═════╝ ╚═╝  ╚═══╝╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═╝           ╚═╝"
         "\n";
 
-    // print title
     write(STDOUT_FILENO, COLOR_BLUE, ft_strlen(COLOR_BLUE));
     write(STDOUT_FILENO, title, ft_strlen(title));
     write(STDOUT_FILENO, COLOR_RESET, ft_strlen(COLOR_RESET));
@@ -126,7 +136,7 @@ void    printTurn_n_pos(t_game *game)
         }
     }
     write(STDOUT_FILENO, "\n", 1);
-    ft_putstr_fd("Robot: ", STDOUT_FILENO);
+    ft_putstr_fd("Bot: ", STDOUT_FILENO);
     for (int j = 0; j < game->turn; j++)
     {
         if ((j % 2) != 0 && game->steps[j])
