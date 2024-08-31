@@ -12,6 +12,8 @@ void    initGame(t_game *game)
     game->cols = 0;
     game->visual = FALSE;
     game->turn = rand() % 2;
+    game->last_checker_row = -1;
+    game->last_checker_col = -1;
 }
 
 int validateInput(int size, char **args, t_game *game)
@@ -20,11 +22,11 @@ int validateInput(int size, char **args, t_game *game)
         return (usageMsg(), 1);
     for (int i = 1; i < size && args[i]; i++)
     {
-        if (!ft_strncmp(args[i], "-g", 2))
+        if (!ft_strncmp(args[i], "-g", 2) && !ft_strncmp(args[i], "g", 1))
         {
             game->visual = TRUE;
         }
-        else if (!ft_strncmp(args[i], "-t", 2))
+        else if (!ft_strncmp(args[i], "-t", 2) && !ft_strncmp(args[i], "g", 1))
         {
             game->visual = FALSE;
         }
@@ -49,7 +51,6 @@ int validateInput(int size, char **args, t_game *game)
     }
     if (!game->rows || !game->cols)
         return (usageMsg(), 1);
-    printf("rows %i, cols %i\n", game->rows, game->cols);
     return (0);
 }
 
@@ -57,29 +58,12 @@ void    usageMsg()
 {
     ft_putstr_fd("Usage:", STDERR_FILENO);
     ft_putstr_fd("./connect4 <rows> <columns> <-t or -g>\n\n", STDERR_FILENO);
-    ft_putstr_fd("\trows      -> minimum 6\n", STDERR_FILENO);
-    ft_putstr_fd("\tcolumns   -> minimum 7\n", STDERR_FILENO);
-    ft_putstr_fd("\t-t        -> terminal user interface\n", STDERR_FILENO);
-    ft_putstr_fd("\t-g        -> graphical user interface\n", STDERR_FILENO);
-}
-/* 
-int validateInput(int size, char **args, t_game *game)
-{
-    if (size < 3 || size > 4)
-        return (usageMsg(), 1);
-    int rows = ft_atoi(args[1]);
-    int cols = ft_atoi(args[2]);
-    int visual;
-    visual = (size == 4) ? ft_atoi(args[3]) : 0;
-    if (rows < MIN_ROWS || cols < MIN_COLS)
-        return (usageMsg(), 1);
-    game->rows = rows;
-    game->cols = cols;
-    game->visual = visual;
-    return (0);
+    ft_putstr_fd("\trows      -> min 6, max 60\n", STDERR_FILENO);
+    ft_putstr_fd("\tcolumns   -> min 7, max 60\n", STDERR_FILENO);
+    ft_putstr_fd("\t-t        -> terminal ui\n", STDERR_FILENO);
+    ft_putstr_fd("\t-g        -> graphical ui | row max 29\n", STDERR_FILENO);
 }
 
- */
 void    displayUserMsg(void)
 {
     write(STDOUT_FILENO, COLOR_GREEN, ft_strlen(COLOR_GREEN));

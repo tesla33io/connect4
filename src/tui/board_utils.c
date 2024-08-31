@@ -1,8 +1,6 @@
 
 #include "../../inc/connect_four.h"
 
-
-
 int isValidPosition (uint64_t board[MAX_SIZE], int row, int col)
 {
     return !(board[row] & (1UL << col));
