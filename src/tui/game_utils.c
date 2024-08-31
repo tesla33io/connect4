@@ -22,11 +22,11 @@ int validateInput(int size, char **args, t_game *game)
         return (usageMsg(), 1);
     for (int i = 1; i < size && args[i]; i++)
     {
-        if (!ft_strncmp(args[i], "-g", 2) && !ft_strncmp(args[i], "g", 1))
+        if (!ft_strncmp(args[i], "-g", 2) || !ft_strncmp(args[i], "g", 1))
         {
             game->visual = TRUE;
         }
-        else if (!ft_strncmp(args[i], "-t", 2) && !ft_strncmp(args[i], "g", 1))
+        else if (!ft_strncmp(args[i], "-t", 2) || !ft_strncmp(args[i], "g", 1))
         {
             game->visual = FALSE;
         }
