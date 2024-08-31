@@ -5,9 +5,15 @@ int getPosFromPixel(int pos, int maxSize, int tile_size);
 
 void executeBotTurnVisual(t_game *game, t_gameVisual *gameVis)
 {
-    SDL_Delay(300);
+    SDL_Delay(400);
     botTurn(game);
-    
+    if (game->visual)
+    {
+        SDL_Delay(400);
+        drawAnimatedChecker(game->bp1, game->bmask, game, gameVis, game->last_checker_row, game->last_checker_col);
+        game->last_checker_row = -1;
+        game->last_checker_col = -1;
+    }
     printBoard(game);
     render(gameVis, game);
     displayUserMsg();
@@ -31,7 +37,7 @@ void executeBotTurnVisual(t_game *game, t_gameVisual *gameVis)
 int executeUserTurnVisual(t_game *game, t_gameVisual *gameVis, int x, int y)
 {
     displayUserMsg();
-    setUserInputVisual(game, x, y);
+    setUserInputVisual(game, gameVis, x, y);
     render(gameVis, game);
     printBoard(game);
     if (isWinner(game->bp1, game->rows, game->cols))
@@ -47,12 +53,18 @@ int executeUserTurnVisual(t_game *game, t_gameVisual *gameVis, int x, int y)
     return (0);
 }
 
-void    setUserInputVisual(t_game *game, int col, int row)
+void    setUserInputVisual(t_game *game, t_gameVisual *gameVis, int col, int row)
 {
     col = getPosFromPixel(col, game->cols, game->tile_size);
     row =  getOpenedRowFromCol(game->bmask, col, game->cols, game->rows);
+    game->last_checker_row = row;
+    game->last_checker_col = col;
     setChecker(game->bp1, game->rows, row, col);
     setChecker(game->bmask, game->rows, row, col);
+    SDL_Delay(400);
+    drawAnimatedChecker(game->bp1, game->bmask, game, gameVis, row, col);
+    game->last_checker_row = -1;
+    game->last_checker_col = -1;
     game->steps[game->turn] = col + 1;
     game->turn += 1;
 }

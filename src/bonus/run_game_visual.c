@@ -12,6 +12,7 @@ int runGameVisual(t_game *game)
         return (ft_putstr_fd("Size of the board too big", STDOUT_FILENO), -1);
     gameVis->isGameRunning = initializeWindow(gameVis, game->rows, game->cols, game->tile_size);
     printBoard(game);
+    render(gameVis, game);
     while (gameVis->isGameRunning)
     {
         processInput(gameVis, game);

@@ -22,11 +22,9 @@ int    launchGame(t_game *game)
 {
     while (1)
     {
-		printf("print board\n");
         printBoard(game);
         if (game->turn % 2 == 0)
         {
-			printf("trun pl\n");
             if (usersTurn(game) == -1)
                 return (-1);
             if (isWinner(game->bp1, game->rows, game->cols))
@@ -34,7 +32,6 @@ int    launchGame(t_game *game)
         }
         else
         {
-			printf("trun ai\n");
             botTurn(game);
             if (isWinner(game->bp2, game->rows, game->cols))
                 return (ft_putendl_fd("/n\tBOT THE WINNER!", 1), printBoard(game), botWinner(), 1);
@@ -86,9 +83,10 @@ void    botTurn(t_game *game)
 	//     continue;
 	int col = calc_ai_turn(game->bp1, game->bp2, (game->turn % 2) + 1, game);
 	int row = getOpenedRowFromCol(game->bmask, col, game->cols, game->rows);
-	// if (!isValidPosition(game->bmask, row, col))
 	setChecker(game->bp2, game->rows, row, col);
 	setChecker(game->bmask, game->rows, row, col);
+    game->last_checker_row = row;
+    game->last_checker_col = col;
 	game->steps[game->turn] = col + 1;
 	game->turn += 1;
 }

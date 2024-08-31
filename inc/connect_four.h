@@ -8,12 +8,10 @@
 # include <time.h>
 # include "../lib/libft/libft.h"
 
-
-
 # define MAX_SIZE 60
 # define MIN_ROWS 6
 # define MIN_COLS 7
-# define MAX_COLS_TERMINAL 27
+# define MAX_COLS_TERMINAL 26
 # define TRUE 1
 # define FALSE 0
 
@@ -41,6 +39,8 @@ typedef struct s_game
     int     winner;
     int     tile_size;
     int     steps[MAX_SIZE * MAX_SIZE];
+    int     last_checker_row;
+    int     last_checker_col;
     uint64_t bp1[MAX_SIZE];
     uint64_t bp2[MAX_SIZE];
     uint64_t bmask[MAX_SIZE];
@@ -50,10 +50,10 @@ typedef struct s_game
 
 void    initGame(t_game *game);
 int     validateInput(int size, char **args, t_game *game);
-int    launchGame(t_game *game);
-int    usersTurn(t_game *game);
+int     launchGame(t_game *game);
+int     usersTurn(t_game *game);
 void    botTurn(t_game *game);
-int isWinner(uint64_t board[MAX_SIZE], int rowMax, int colMax);
+int     isWinner(uint64_t board[MAX_SIZE], int rowMax, int colMax);
 void    userWinner();
 void    botWinner();
 /**
